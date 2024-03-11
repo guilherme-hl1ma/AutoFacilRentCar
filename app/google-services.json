@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "454053728178",
+    "project_id": "autofacilrentcar",
+    "storage_bucket": "autofacilrentcar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454053728178:android:7f5e5c0b45446b908c1eab",
+        "android_client_info": {
+          "package_name": "br.com.guilhermehl1ma.autofacil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVKtATmrg1urhaOE-eiCoViBXDQpxD8L4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
