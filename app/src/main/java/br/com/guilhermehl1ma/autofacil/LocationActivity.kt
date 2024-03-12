@@ -57,6 +57,7 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
                         MarkerOptions()
                             .position(LatLng(lat, lng))
                             .title(name)
+                            .snippet(description)
                     )
                 }
             }
