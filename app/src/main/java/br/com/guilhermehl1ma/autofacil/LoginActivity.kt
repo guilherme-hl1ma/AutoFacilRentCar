@@ -20,6 +20,12 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // initialize Firebase Auth
+        auth = Firebase.auth
+
+        if (auth.currentUser != null) {
+            goToSuccessLogin()
+        }
 
         binding.btnSignIn.setOnClickListener {
             if (binding.inputEmail.text?.isNotEmpty() == true && binding.inputPassword.text?.isNotEmpty() == true) {
@@ -43,9 +49,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(forgotPasswordScreen)
             finish()
         }
-
-        // initialize Firebase Auth
-        auth = Firebase.auth
     }
 
     private fun signInApp(email: String, password: String) {
