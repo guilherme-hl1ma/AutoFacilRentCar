@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         clickSignOut()
         clickSignUp()
+
+        binding.btnLocation.setOnClickListener{
+            goToLocation()
+        }
     }
 
     private fun clickSignOut() {
@@ -75,6 +79,12 @@ class MainActivity : AppCompatActivity() {
     private fun goToSignUpScreen() {
         val signUpScreen = Intent(this, SignUpActivity::class.java)
         startActivity(signUpScreen)
+        finish()
+    }
+
+    private fun goToLocation() {
+        val locationScreen = Intent(this, LocationActivity::class.java)
+        startActivity(locationScreen)
         finish()
     }
 

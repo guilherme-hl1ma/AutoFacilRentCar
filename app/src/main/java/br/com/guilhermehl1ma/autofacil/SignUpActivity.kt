@@ -168,8 +168,10 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun addNewUser(email: String, password: String) {
+        val user = auth.currentUser
         val completeName = binding.inputName.text.toString() + binding.inputSurname.text.toString()
         val data = hashMapOf(
+            "userUid" to user?.uid,
             "email" to email,
             "senha" to password,
             "nome" to completeName,
