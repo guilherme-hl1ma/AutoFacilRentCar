@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         // user already logged in immediately go to main screen
-        if (auth.currentUser?.uid != null) {
+        if (auth.currentUser?.isEmailVerified == true) {
             goToSuccessLogin()
         }
 
@@ -83,7 +83,6 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("signInAnonymously", "Success")
-                val user = auth.currentUser
                 goToLocationMap()
             } else {
                 // If sign in fails, display a message to the user.

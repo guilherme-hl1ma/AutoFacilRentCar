@@ -5,14 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import br.com.guilhermehl1ma.autofacil.databinding.ActivitySignUpScreenBinding
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
@@ -59,22 +55,16 @@ class SignUpActivity : AppCompatActivity() {
 
         // Callback function for Phone Auth
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-            // This method is called when the verification is completed
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                linkWithCredential()
                 startActivity(Intent(applicationContext, LoginActivity::class.java))
                 finish()
                 Log.d("GFG", "onVerificationCompleted Success")
             }
 
-            // Called when verification is failed add log statement to see the exception
             override fun onVerificationFailed(e: FirebaseException) {
                 Log.d("GFG", "onVerificationFailed  $e")
             }
 
-            // On code is sent by the firebase this method is called
-            // in here we start a new activity where user can enter the OTP
             override fun onCodeSent(
                 verificationId: String,
                 token: PhoneAuthProvider.ForceResendingToken
@@ -83,9 +73,6 @@ class SignUpActivity : AppCompatActivity() {
                 storedVerificationId = verificationId
                 resendToken = token
 
-                // Start a new activity using intent
-                // also send the storedVerificationId using intent
-                // we will use this id to send the otp back to firebase
                 val intent = Intent(applicationContext, OtpActivity::class.java)
                 intent.putExtra("storedVerificationId", storedVerificationId)
                 startActivity(intent)
@@ -98,16 +85,7 @@ class SignUpActivity : AppCompatActivity() {
         binding.btnSignUp.setOnClickListener {
             if (validateFields()) {
                 number = "+55${binding.inputPhoneNumber.text?.trim().toString()}"
-
-                if (auth.currentUser?.isAnonymous == true) {
-                    linkWithCredential()
-                } else {
-                    createUserAccount(
-                        binding.inputEmail.text.toString(),
-                        binding.inputPassword.text.toString()
-                    )
-                }
-                addNewUser(
+                createUserAccount(
                     binding.inputEmail.text.toString(),
                     binding.inputPassword.text.toString()
                 )
@@ -159,6 +137,7 @@ class SignUpActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { register ->
                 if (register.isSuccessful) {
+                    addNewUser(email, password)
                     if (binding.radioEmail.isChecked) {
                         sendVerificationEmail()
                     } else {
@@ -166,28 +145,6 @@ class SignUpActivity : AppCompatActivity() {
                     }
                 } else {
                     Log.e("createUserAccount", "Failure", register.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            }
-    }
-
-    //
-    private fun linkWithCredential() {
-        val credential = EmailAuthProvider.getCredential(
-            binding.inputEmail.text.toString(),
-            binding.inputPassword.text.toString()
-        )
-
-        auth.currentUser!!.linkWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Log.d("linkWithCredential", "Success")
-                } else {
-                    Log.w("linkWithCredential", "Failure", task.exception)
                     Toast.makeText(
                         baseContext,
                         "Authentication failed.",
