@@ -89,6 +89,20 @@
         android:visibility="gone"
         />
 
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/radio_sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verify by SMS"
+        />
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/radio_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verify by Email"
+        />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSignUp"
         android:layout_width="wrap_content"
@@ -98,18 +112,4 @@
         android:textAllCaps="false"
         android:text="Sign Up"
         />
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Verify by SMS"
-        />
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Verify by Email"
-        />
-
-
 </androidx.appcompat.widget.LinearLayoutCompat>

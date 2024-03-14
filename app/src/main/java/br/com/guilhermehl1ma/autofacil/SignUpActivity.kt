@@ -43,6 +43,18 @@ class SignUpActivity : AppCompatActivity() {
         auth = Firebase.auth
         functions = Firebase.functions("southamerica-east1")
 
+        binding.radioSms.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.radioEmail.isChecked = false
+            }
+        }
+
+        binding.radioEmail.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.radioSms.isChecked = false
+            }
+        }
+
         clickOnSignUp()
 
         // Callback function for Phone Auth
@@ -50,6 +62,7 @@ class SignUpActivity : AppCompatActivity() {
 
             // This method is called when the verification is completed
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                linkWithCredential()
                 startActivity(Intent(applicationContext, LoginActivity::class.java))
                 finish()
                 Log.d("GFG", "onVerificationCompleted Success")
@@ -94,7 +107,6 @@ class SignUpActivity : AppCompatActivity() {
                         binding.inputPassword.text.toString()
                     )
                 }
-                //sendVerificationCode(number)
                 addNewUser(
                     binding.inputEmail.text.toString(),
                     binding.inputPassword.text.toString()
@@ -106,11 +118,52 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    private fun validateFields(): Boolean {
+        var isValid = true
+        if (binding.inputName.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (binding.inputSurname.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (binding.inputCpf.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (binding.inputBirthDate.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (binding.inputPhoneNumber.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (binding.inputEmail.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (binding.inputPassword.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        if (!binding.radioSms.isChecked && !binding.radioEmail.isChecked) {
+            isValid = false
+        }
+
+        return isValid
+    }
+
     private fun createUserAccount(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { register ->
                 if (register.isSuccessful) {
-                    sendVerificationEmail()
+                    if (binding.radioEmail.isChecked) {
+                        sendVerificationEmail()
+                    } else {
+                        sendVerificationCode(number)
+                    }
                 } else {
                     Log.e("createUserAccount", "Failure", register.exception)
                     Toast.makeText(
@@ -122,6 +175,7 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    //
     private fun linkWithCredential() {
         val credential = EmailAuthProvider.getCredential(
             binding.inputEmail.text.toString(),
@@ -218,40 +272,6 @@ class SignUpActivity : AppCompatActivity() {
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
         Log.d("GFG", "Auth started")
-    }
-
-
-    private fun validateFields(): Boolean {
-        var isValid = true
-        if (binding.inputName.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        if (binding.inputSurname.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        if (binding.inputCpf.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        if (binding.inputBirthDate.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        if (binding.inputPhoneNumber.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        if (binding.inputEmail.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        if (binding.inputPassword.text.toString().isEmpty()) {
-            isValid = false
-        }
-
-        return isValid
     }
 
     private fun goToLoginScreen() {

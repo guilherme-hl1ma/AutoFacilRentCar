@@ -23,7 +23,8 @@ class LoginActivity : AppCompatActivity() {
         // initialize Firebase Auth
         auth = Firebase.auth
 
-        if (auth.currentUser != null) {
+        // user already logged in immediately go to main screen
+        if (auth.currentUser?.uid != null) {
             goToSuccessLogin()
         }
 

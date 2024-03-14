@@ -3,8 +3,6 @@ package br.com.guilhermehl1ma.autofacil
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import br.com.guilhermehl1ma.autofacil.databinding.ActivityOtpScreenBinding
 import com.google.firebase.Firebase
@@ -16,7 +14,7 @@ import com.google.firebase.auth.auth
 
 class OtpActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpScreenBinding
-    private lateinit var auth: FirebaseAuth // get reference of the firebase auth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +32,7 @@ class OtpActivity : AppCompatActivity() {
             if(otp.isNotEmpty()){
                 val credential : PhoneAuthCredential = PhoneAuthProvider.getCredential(
                     storedVerificationId.toString(), otp)
-                signInWithPhoneAuthCredential(credential)
+
             }else{
                 Toast.makeText(this,"Enter OTP", Toast.LENGTH_SHORT).show()
             }
