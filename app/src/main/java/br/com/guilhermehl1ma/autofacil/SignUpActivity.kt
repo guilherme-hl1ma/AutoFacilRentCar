@@ -25,10 +25,8 @@ class SignUpActivity : AppCompatActivity() {
 
     var number: String = ""
 
-    // we will use this to match the sent otp from firebase
     lateinit var storedVerificationId: String
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
-    private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +36,8 @@ class SignUpActivity : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = Firebase.auth
         functions = Firebase.functions("southamerica-east1")
+
+
 
         binding.radioSms.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -52,33 +52,6 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         clickOnSignUp()
-
-        // Callback function for Phone Auth
-        callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                startActivity(Intent(applicationContext, LoginActivity::class.java))
-                finish()
-                Log.d("GFG", "onVerificationCompleted Success")
-            }
-
-            override fun onVerificationFailed(e: FirebaseException) {
-                Log.d("GFG", "onVerificationFailed  $e")
-            }
-
-            override fun onCodeSent(
-                verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken
-            ) {
-                Log.d("GFG", "onCodeSent: $verificationId")
-                storedVerificationId = verificationId
-                resendToken = token
-
-                val intent = Intent(applicationContext, OtpActivity::class.java)
-                intent.putExtra("storedVerificationId", storedVerificationId)
-                startActivity(intent)
-                finish()
-            }
-        }
     }
 
     private fun clickOnSignUp() {
@@ -217,7 +190,6 @@ class SignUpActivity : AppCompatActivity() {
                 // Error cloud function
                 Log.e("addNewUser", "Error to call addNewUser Function", exception)
             }
-
     }
 
     private fun sendVerificationCode(number: String) {
@@ -228,7 +200,33 @@ class SignUpActivity : AppCompatActivity() {
             .setCallbacks(callbacks) // OnVerificationStateChangedCallbacks
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
-        Log.d("GFG", "Auth started")
+        Log.d("sendVerificationCode", "Auth started")
+    }
+
+    private val callbacks = object: PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+            startActivity(Intent(applicationContext, MainActivity::class.java))
+            finish()
+            Log.d("onVerificationCompleted", "Success")
+        }
+
+        override fun onVerificationFailed(e: FirebaseException) {
+            Log.d("onVerificationFailed", "onVerificationFailed  $e")
+        }
+
+        override fun onCodeSent(
+            verificationId: String,
+            token: PhoneAuthProvider.ForceResendingToken
+        ) {
+            Log.d("onCodeSent", "onCodeSent: $verificationId")
+            storedVerificationId = verificationId
+            resendToken = token
+
+            val intent = Intent(applicationContext, OtpActivity::class.java)
+            intent.putExtra("storedVerificationId", storedVerificationId)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun goToLoginScreen() {
