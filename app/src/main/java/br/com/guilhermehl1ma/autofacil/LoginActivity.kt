@@ -7,24 +7,28 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.guilhermehl1ma.autofacil.databinding.ActivityLoginScreenBinding
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.HttpsCallableResult
+import com.google.firebase.functions.functions
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginScreenBinding
-    private lateinit var auth: FirebaseAuth // declare an instance of FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+    private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // initialize Firebase Auth
         auth = Firebase.auth
+        functions = Firebase.functions("southamerica-east1")
 
-        // user already logged in immediately go to main screen
-        if (auth.currentUser?.isEmailVerified == true) {
+        if (auth.currentUser != null) {
             goToSuccessLogin()
         }
 
@@ -57,14 +61,9 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d("signInWithEmail", "SUCCESS")
-                    val user = Firebase.auth.currentUser
-                    if (user?.isEmailVerified == true) {
-                        goToSuccessLogin()
-                    } else {
-                        binding.messageError.text = "Please verify your email before sign in"
-                        binding.messageError.visibility = View.VISIBLE
-                    }
-                } else {
+                    verifyUser()
+                }
+                else {
                     // If sign in fails, display a message to the user.
                     Log.w("signInWithEmail", "Failure", task.exception)
                     Toast.makeText(
@@ -93,6 +92,22 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT,
                 ).show()
             }
+        }
+    }
+
+    private fun verifyUser() {
+        val user = auth.currentUser!!
+        if(user.isEmailVerified || user.phoneNumber != null) {
+            goToSuccessLogin()
+        } else {
+            if (user.phoneNumber == null) {
+                binding.messageError.text = "SMS not verified"
+                binding.messageError.visibility = View.VISIBLE
+            } else {
+                binding.messageError.text = "Please verify your email before sign in"
+                binding.messageError.visibility = View.VISIBLE
+            }
+            Firebase.auth.signOut()
         }
     }
 
