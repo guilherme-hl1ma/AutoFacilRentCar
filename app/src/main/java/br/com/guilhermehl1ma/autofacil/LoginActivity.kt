@@ -124,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToLocationMap() {
-        val locationScreen = Intent(this, LocationActivity::class.java)
+        val locationScreen = Intent(this, MainActivity::class.java)
         startActivity(locationScreen)
         finish()
     }
