@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textLoginCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +20,7 @@
         android:textSize="30sp"
         />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSignOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +30,7 @@
         android:textAllCaps="false"
         />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnBackToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,7 +42,7 @@
         android:visibility="gone"
         />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSignUpAnonymous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +58,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,5 +68,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="Icon location"
             app:tint="@color/gray" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

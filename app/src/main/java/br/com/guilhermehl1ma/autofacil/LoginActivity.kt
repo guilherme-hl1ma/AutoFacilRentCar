@@ -6,23 +6,23 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import br.com.guilhermehl1ma.autofacil.databinding.ActivityLoginScreenBinding
-import com.google.android.gms.tasks.Task
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import br.com.guilhermehl1ma.autofacil.databinding.ActivityLoginBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.HttpsCallableResult
 import com.google.firebase.functions.functions
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityLoginScreenBinding
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginScreenBinding.inflate(layoutInflater)
+        installSplashScreen()
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = Firebase.auth

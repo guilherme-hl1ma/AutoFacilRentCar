@@ -17,7 +17,6 @@ import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.HttpsCallableResult
 import com.google.firebase.functions.functions
 
-
 // Implement OnMapReadyCallback.
 class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityLocationBinding
@@ -63,7 +62,6 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-
 
     private fun getRentalUnits(): Task<HttpsCallableResult> {
         return functions

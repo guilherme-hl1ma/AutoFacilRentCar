@@ -112,4 +112,5 @@
         android:textAllCaps="false"
         android:text="Sign Up"
         />
+
 </androidx.appcompat.widget.LinearLayoutCompat>

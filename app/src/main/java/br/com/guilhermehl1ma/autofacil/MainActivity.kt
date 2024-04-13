@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import br.com.guilhermehl1ma.autofacil.databinding.ActivityMainScreenBinding
+import br.com.guilhermehl1ma.autofacil.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -14,11 +14,11 @@ import com.google.firebase.auth.auth
 class MainActivity : AppCompatActivity() {
     // declare an instance of FirebaseAuth
     private lateinit var auth: FirebaseAuth
-    private lateinit var binding: ActivityMainScreenBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainScreenBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // initialize Firebase Auth

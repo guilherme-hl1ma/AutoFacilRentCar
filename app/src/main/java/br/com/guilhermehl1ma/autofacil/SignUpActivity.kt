@@ -1,12 +1,13 @@
 package br.com.guilhermehl1ma.autofacil
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import br.com.guilhermehl1ma.autofacil.databinding.ActivitySignUpScreenBinding
+import androidx.appcompat.app.AppCompatActivity
+import br.com.guilhermehl1ma.autofacil.databinding.ActivitySignUpBinding
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -18,26 +19,27 @@ import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
 import java.util.concurrent.TimeUnit
 
+
 class SignUpActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySignUpScreenBinding
+    private lateinit var binding: ActivitySignUpBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var functions: FirebaseFunctions
 
+
     var number: String = ""
 
+    private lateinit var callbacks : PhoneAuthProvider.OnVerificationStateChangedCallbacks
     lateinit var storedVerificationId: String
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpScreenBinding.inflate(layoutInflater)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Initialize Firebase Auth
         auth = Firebase.auth
         functions = Firebase.functions("southamerica-east1")
-
-
 
         binding.radioSms.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -51,10 +53,6 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        clickOnSignUp()
-    }
-
-    private fun clickOnSignUp() {
         binding.btnSignUp.setOnClickListener {
             if (validateFields()) {
                 number = "+55${binding.inputPhoneNumber.text?.trim().toString()}"
@@ -65,6 +63,36 @@ class SignUpActivity : AppCompatActivity() {
             } else {
                 binding.messageError.text = "Fill the fields"
                 binding.messageError.visibility = View.VISIBLE
+            }
+        }
+
+        callbacks = object: PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            override fun
+                    onVerificationCompleted(
+                credential:
+                PhoneAuthCredential
+            ) {
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                finish()
+                Log.d("onVerificationCompleted", "Success")
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                Log.d("onVerificationFailed", "onVerificationFailed  $e")
+            }
+
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
+                Log.d("onCodeSent", "onCodeSent: $verificationId")
+                storedVerificationId = verificationId
+                resendToken = token
+
+                val intent = Intent(applicationContext, OtpActivity::class.java)
+                intent.putExtra("storedVerificationId", storedVerificationId)
+                startActivity(intent)
+                finish()
             }
         }
     }
@@ -203,34 +231,9 @@ class SignUpActivity : AppCompatActivity() {
         Log.d("sendVerificationCode", "Auth started")
     }
 
-    private val callbacks = object: PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-            startActivity(Intent(applicationContext, MainActivity::class.java))
-            finish()
-            Log.d("onVerificationCompleted", "Success")
-        }
-
-        override fun onVerificationFailed(e: FirebaseException) {
-            Log.d("onVerificationFailed", "onVerificationFailed  $e")
-        }
-
-        override fun onCodeSent(
-            verificationId: String,
-            token: PhoneAuthProvider.ForceResendingToken
-        ) {
-            Log.d("onCodeSent", "onCodeSent: $verificationId")
-            storedVerificationId = verificationId
-            resendToken = token
-
-            val intent = Intent(applicationContext, OtpActivity::class.java)
-            intent.putExtra("storedVerificationId", storedVerificationId)
-            startActivity(intent)
-            finish()
-        }
-    }
-
     private fun goToLoginScreen() {
         val loginScreen = Intent(this, LoginActivity::class.java)
         startActivity(loginScreen)
     }
+
 }

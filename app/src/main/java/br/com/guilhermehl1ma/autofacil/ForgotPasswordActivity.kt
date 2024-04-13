@@ -4,24 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import br.com.guilhermehl1ma.autofacil.databinding.ActivityForgotPasswordScreenBinding
+import br.com.guilhermehl1ma.autofacil.databinding.ActivityForgotPasswordBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
 class ForgotPasswordActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityForgotPasswordScreenBinding
+    private lateinit var binding: ActivityForgotPasswordBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var strEmail: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityForgotPasswordScreenBinding.inflate(layoutInflater)
+        binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = Firebase.auth

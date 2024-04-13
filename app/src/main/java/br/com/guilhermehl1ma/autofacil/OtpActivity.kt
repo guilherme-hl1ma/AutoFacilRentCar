@@ -5,28 +5,24 @@ import android.os.Bundle
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import br.com.guilhermehl1ma.autofacil.databinding.ActivityOtpScreenBinding
+import br.com.guilhermehl1ma.autofacil.databinding.ActivityOtpBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.auth
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.functions
 
 class OtpActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityOtpScreenBinding
+    private lateinit var binding: ActivityOtpBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityOtpScreenBinding.inflate(layoutInflater)
+        binding = ActivityOtpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = Firebase.auth
-        functions = Firebase.functions("southamerica-east1")
 
         // get storedVerificationId from the intent
         val storedVerificationId = intent.getStringExtra("storedVerificationId")
@@ -49,7 +45,11 @@ class OtpActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d("linkWithCredential", "Success")
-                    signInWithPhoneAuthCredential(credential)
+                    setSMSVerified(credential)
+                    val intent = Intent(this , MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    Log.d("signInWithPhoneAuthCredential", "SUCCESS")
                 } else {
                     Log.w("linkWithCredential", "Failure", task.exception)
                     Toast.makeText(
@@ -57,25 +57,6 @@ class OtpActivity : AppCompatActivity() {
                         "Authentication failed.",
                         Toast.LENGTH_SHORT,
                     ).show()
-                }
-            }
-    }
-
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    setSMSVerified(credential)
-                    val intent = Intent(this , MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    Log.d("signInWithPhoneAuthCredential", "SUCCESS")
-                } else {
-                    // Sign in failed, display a message and update the UI
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        // The verification code entered was invalid
-                        Toast.makeText(this,"Invalid OTP", Toast.LENGTH_SHORT).show()
-                    }
                 }
             }
     }
